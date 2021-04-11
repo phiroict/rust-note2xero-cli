@@ -1,20 +1,23 @@
 
-// Core functions we use
+/// Core functions we use
 use noted2xero_core::n2x_core::init_logging;
 use noted2xero_core::n2x_core::map_noted_to_xero;
+use noted2xero_core::n2x_core::fill_noted_collection;
 use noted2xero_core::xero::XeroType;
 use noted2xero_core::noted::NotedType;
 use noted2xero_core::constants;
 
-
+/// Logging
 use log::{info, warn, error};
 extern crate glob;
 
+/// File and date functions
 use self::glob::glob;
 use std::fs;
 use chrono;
 use chrono::Duration;
 use chrono::Local;
+
 
 
 /// Meta information
@@ -94,29 +97,13 @@ fn read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {
 /// Parse the noted csv from the content read from the file.
 /// Returns a collection of NotedType
 fn parse_noted_csv(content: &String) -> Vec<NotedType> {
-    let mut reader = csv::Reader::from_reader(content.as_bytes());
-    let mut result: Vec<NotedType> = Vec::new();
-
-    for record in reader.records() {
-        let record = record.unwrap();
-        let item = NotedType {
-            title: record[0].to_string(),
-            create_date: record[1].to_string(),
-            duration: record[2].to_string().parse::<i16>().unwrap_or(0),
-            category: record[3].to_string(),
-            type_therapy: record[4].to_string(),
-            full_name: record[5].to_string(),
-            email: record[6].to_string(),
-            external_agenecy_contacts_data: record[7].to_string(),
-            contacts_agency_organisation: record[8].to_string(),
-            contact_association_client: record[9].to_string(),
-            contacts_email: record[10].to_string(),
-            contact_name: record[11].to_string(),
-        };
-        result.push(item);
-    };
-    result
+    let reader = csv::Reader::from_reader(content.as_bytes());
+    let result: Vec<NotedType> = Vec::new();
+    let ret_val = fill_noted_collection(reader, result);
+    ret_val
 }
+
+
 
 
 /// Write out the xero CSV folder from the Noted collection
