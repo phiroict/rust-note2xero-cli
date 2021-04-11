@@ -2,9 +2,11 @@
 /// Core functions we use
 use noted2xero_core::n2x_core::init_logging;
 use noted2xero_core::n2x_core::map_noted_to_xero;
-use noted2xero_core::n2x_core::fill_noted_collection;
+use noted2xero_core::n2x_core::read_file;
+use noted2xero_core::n2x_core::parse_noted_csv;
+
 use noted2xero_core::xero::XeroType;
-use noted2xero_core::noted::NotedType;
+
 use noted2xero_core::constants;
 
 /// Logging
@@ -88,20 +90,7 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
     }
 }
 
-/// Read the file for use with the CSV component
-fn read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {
-    let res = fs::read_to_string(path)?;
-    Ok(res)
-}
 
-/// Parse the noted csv from the content read from the file.
-/// Returns a collection of NotedType
-fn parse_noted_csv(content: &String) -> Vec<NotedType> {
-    let reader = csv::Reader::from_reader(content.as_bytes());
-    let result: Vec<NotedType> = Vec::new();
-    let ret_val = fill_noted_collection(reader, result);
-    ret_val
-}
 
 
 
