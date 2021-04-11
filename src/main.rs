@@ -1,4 +1,3 @@
-
 /// Core functions we use
 use noted2xero_core::n2x_core::init_logging;
 use noted2xero_core::n2x_core::map_noted_to_xero;
@@ -10,7 +9,8 @@ use noted2xero_core::xero::XeroType;
 use noted2xero_core::constants;
 
 /// Logging
-use log::{info, warn, error};
+use log::{trace, info, warn, error};
+
 extern crate glob;
 
 /// File and date functions
@@ -19,7 +19,6 @@ use std::fs;
 use chrono;
 use chrono::Duration;
 use chrono::Local;
-
 
 
 /// Meta information
@@ -33,7 +32,7 @@ fn main() {
     let start_time = Local::now();
     //Set logging
     init_logging();
-    info!("Hi, I am {} at your service, this is version {}",CARGO_PKG_NAME, VERSION);
+    info!("Hi, I am {} at your service, this is version {}", CARGO_PKG_NAME, VERSION);
     let root = "resources/";
     let noted_folder = format!("{}{}", root, "notedfolder");
     let done_folder = format!("{}{}", root, "donefolder");
@@ -64,7 +63,7 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
             let xero_collection = map_noted_to_xero(&noted_collection, None);
             write_xero_csv(xero_collection, xero_folder);
             // We're done, move the original file
-            let copy_result = fs::copy(entry.display().to_string(),format!("{}/processed-{}.csv",done_folder.to_string(),Local::now().format("%Y-%m-%d--%s") ));
+            let copy_result = fs::copy(entry.display().to_string(), format!("{}/processed-{}.csv", done_folder.to_string(), Local::now().format("%Y-%m-%d--%s")));
             match copy_result {
                 Ok(_) => {
                     info!("Processing complete, copying file {} to location {}", entry.display().to_string(), done_folder.to_string());
@@ -74,7 +73,7 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
                             info!("Noted file {} deleted", entry.display().to_string());
                         }
                         Err(err) => {
-                            error!("Could not delete noted file: {} - {:?})\nYou should delete it yourself.",entry.display().to_string(), err);
+                            error!("Could not delete noted file: {} - {:?})\nYou should delete it yourself.", entry.display().to_string(), err);
                         }
                     }
                 }
@@ -83,7 +82,6 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
                 }
             }
         }
-
     }
     if path_counter == 0 {
         warn!("There were no noted csvs in the noted folder, this application will leave now");
@@ -91,25 +89,29 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
 }
 
 
-
-
-
-
 /// Write out the xero CSV folder from the Noted collection
 /// # Arguments
 /// * xero_lines: collectoin of XeroTypes to get the data from.
 /// * target_path: path of the directory to push the xero import file to.
 fn write_xero_csv(xero_lines: Vec<XeroType>, target_path: &String) {
-    let today = Local::now()  + Duration::days(constants::INVOICE_DAYS_TODAY as i64);
+    let today = Local::now() + Duration::days(constants::INVOICE_DAYS_TODAY as i64);
     let filepath = format!("{}/xero-{}.csv", target_path, today.format("%Y-%m-%d--%s"));
     let mut writer = csv::Writer::from_path(&filepath).unwrap();
-    writer.write_record(XeroType::get_headers()).expect("ERR:: Could not write the headers, skipping");
+    let header_result = writer.write_record(XeroType::get_headers());
+    match header_result {
+        Ok(_) => { info!("Written Xero headers") }
+        Err(err) => { error!("Could not write headers, skipping this, reason {:?}", err) }
+    }
     for xero_item in xero_lines.iter() {
-        writer.write_record(xero_item.get_item_as_vector()).expect("ERR:: Could not save line, skipping");
+        let write_record_result = writer.write_record(xero_item.get_item_as_vector());
+        match write_record_result {
+            Ok(record) => { trace!("Record written: {:?}", record) }
+            Err(err) => { error!("This record has been skipped: {:?}", err) }
+        }
     }
     let flush_result = writer.flush();
     match flush_result {
-        Ok(_) => { info!("Stored Xero csv at {}",filepath) }
-        Err(err) => { error!("Could not save xero file {} because: {:?}",&filepath, err) }
+        Ok(_) => { info!("Stored Xero csv at {}", filepath) }
+        Err(err) => { error!("Could not save xero file {} because: {:?}", &filepath, err) }
     }
 }
