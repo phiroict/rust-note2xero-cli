@@ -61,7 +61,7 @@ fn process_noted_csv(noted_folder: &String, done_folder: &String, xero_folder: &
             info!("Processing file {}", target_file);
             let noted_content_result = read_file(entry.display().to_string());
             let noted_collection = parse_noted_csv(&noted_content_result.unwrap());
-            let xero_collection = map_noted_to_xero(&noted_collection);
+            let xero_collection = map_noted_to_xero(&noted_collection, None);
             write_xero_csv(xero_collection, xero_folder);
             // We're done, move the original file
             let copy_result = fs::copy(entry.display().to_string(),format!("{}/processed-{}.csv",done_folder.to_string(),Local::now().format("%Y-%m-%d--%s") ));
