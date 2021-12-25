@@ -73,7 +73,7 @@ fn process_noted_csv(noted_folder: &str, done_folder: &str, xero_folder: &str) {
                 entry.display().to_string(),
                 format!(
                     "{}/processed-{}.csv",
-                    done_folder.to_string(),
+                    done_folder,
                     Local::now().format("%Y-%m-%d--%s")
                 ),
             );
