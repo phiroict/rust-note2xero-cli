@@ -1,6 +1,6 @@
 [package]
 name = "noted2xero_cli"
-version = "1.11.4"
+version = "1.11.5"
 authors = ["Philip Rodrigues <phil@phiroict.co.nz>"]
 edition = "2018"
 description = "The commandline utility NOTED to XERO conversion"
