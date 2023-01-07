@@ -57,7 +57,7 @@ fn process_noted_csv(noted_folder: &str, done_folder: &str, xero_folder: &str) {
         "noted path is {}, done path is {}, xero folder is {}",
         noted_folder, done_folder, xero_folder
     );
-    let paths: glob::Paths = glob(&format!("{}/*.csv", noted_folder)[..]).unwrap();
+    let paths: glob::Paths = glob(&format!("{noted_folder}/*.csv")[..]).unwrap();
     let mut path_counter = 0;
     for path in paths {
         if let Ok(entry) = path {
