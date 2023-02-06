@@ -34,9 +34,9 @@ fn main() {
         CARGO_PKG_NAME, VERSION
     );
     let root = "resources/";
-    let noted_folder = format!("{}{}", root, "notedfolder");
-    let done_folder = format!("{}{}", root, "donefolder");
-    let xero_folder = format!("{}{}", root, "xerofolder");
+    let noted_folder = format!("{root}notedfolder");
+    let done_folder = format!("{root}donefolder");
+    let xero_folder = format!("{root}xerofolder");
     process_noted_csv(&noted_folder, &done_folder, &xero_folder);
 
     let end_time = Local::now();
@@ -57,7 +57,7 @@ fn process_noted_csv(noted_folder: &str, done_folder: &str, xero_folder: &str) {
         "noted path is {}, done path is {}, xero folder is {}",
         noted_folder, done_folder, xero_folder
     );
-    let paths: glob::Paths = glob(&format!("{}/*.csv", noted_folder)[..]).unwrap();
+    let paths: glob::Paths = glob(&format!("{noted_folder}/*.csv")[..]).unwrap();
     let mut path_counter = 0;
     for path in paths {
         if let Ok(entry) = path {
