@@ -1,9 +1,11 @@
 [package]
-name = "noted2xer_cli"
+name = "noted2xero_cli"
 version = "1.11.10"
 authors = ["Philip Rodrigues <phil@phiroict.co.nz>"]
 edition = "2021"
-
+license = "GPL-2.0"
+repository = "https://github.com/phiroict/rust-note2xero-cli.git"
+description = "The commandline version of the noted to web converter."
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
