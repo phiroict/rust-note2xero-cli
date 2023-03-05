@@ -1,6 +1,6 @@
 [package]
 name = "noted2xero_cli"
-version = "1.11.10"
+version = "1.11.11"
 authors = ["Philip Rodrigues <phil@phiroict.co.nz>"]
 edition = "2021"
 license = "GPL-2.0"
@@ -9,11 +9,11 @@ description = "The commandline version of the noted to web converter."
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-noted2xero_core = {path = "../noted2xero_core", version ="1.11.10"}
+noted2xero_core = {path = "../noted2xero_core", version ="1.11.11"}
 log = "0.4.17"
 simple_logger = "4.0.0"
 env_logger = "0.10.0"
 csv = "1.1.6"
 glob = "0.3.1"
 chrono = "0.4.23"
-tokio = "1.25.0"
+tokio = "1.26.0"
